@@ -72,16 +72,17 @@ with xlrd.open_workbook('RNF - Osnovni podatki izbranih proizvodnih enot.xlsx') 
                     elektMoc = elektInfo[-3]
                     ## sestava imena za podatke proizvodnje elektrarne:
                     ## [id] stevilka elektrarne _[K] kraj _[P] postna stevilka _[T] tip _[M] moc
-                    imePodElekt = '[id]{}_[K]{}_[P]{}_[T]{}_[M]{}.csv'.\
+                    imePodElekt = '[id]{0:04d}_[K]{1}_[P]{2}_[T]{3}_[M]{4}.csv'.\
                                     format(int(id), kraj.group(), postNum, elektTip, elektMoc)
                     os.chdir(OkoljeProizvodnja)
                     ## pisanje csv-ja realizacije proizvodnje elektrarne z id:
                     with open(imePodElekt, 'w', newline='') as ProizvodnjaCSV:
                         wr = csv.writer(ProizvodnjaCSV, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                         ## zapis naslovov vrstic
-                        wr.writerow(['datum', 'cas', 'realizacija'])
+                        wr.writerow(['datum in ura', 'realizacija'])
                         for i in range(2, beriStran.nrows):
                             ## zapis datuma, ure in realizacije v vsako vrstico
                             datumUra = xlrd.xldate_as_tuple(beriStran.row_values(i)[0], beri.datemode)
-                            vrstica = [datetime.date(*datumUra[0:3]), datetime.time(*datumUra[3:6]), beriStran.row_values(i)[idPoz]]
+                            vrstica = [datetime.datetime(*datumUra), beriStran.row_values(i)[idPoz]]
                             wr.writerow(vrstica)
+
