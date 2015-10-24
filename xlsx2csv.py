@@ -69,10 +69,11 @@ with xlrd.open_workbook('RNF - Osnovni podatki izbranih proizvodnih enot.xlsx') 
                     ## izbere relevantne podatke o elekt
                     postNum = elektInfo[3]
                     elektTip = elektInfo[-1]
+                    elektMoc = elektInfo[-3]
                     ## sestava imena za podatke proizvodnje elektrarne:
-                    ## [id] stevilka elektrarne _[K] kraj _[P] postna stevilka _[T] tip
-                    imePodElekt = '[id]{}_[K]{}_[P]{}_[T]{}.csv'.\
-                                    format(int(id), kraj.group(), postNum, elektTip)
+                    ## [id] stevilka elektrarne _[K] kraj _[P] postna stevilka _[T] tip _[M] moc
+                    imePodElekt = '[id]{}_[K]{}_[P]{}_[T]{}_[M]{}.csv'.\
+                                    format(int(id), kraj.group(), postNum, elektTip, elektMoc)
                     os.chdir(OkoljeProizvodnja)
                     ## pisanje csv-ja realizacije proizvodnje elektrarne z id:
                     with open(imePodElekt, 'w', newline='') as ProizvodnjaCSV:
