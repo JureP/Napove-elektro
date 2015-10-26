@@ -1,14 +1,17 @@
 ## pretvorba csv-jev v rds
+## tvori feature matrix
 library(xts)
+library(lubridate)
 
 ## okolje kjer so shranjene realizacije proizvodnje
 OkoljeRealizacija <- 'C:/Users/Podlogar/Documents/Projekt Elektro/01_Priprava podatkov/Podatki/Proizvodnja'
-## realizacija shranjena v RDS
-OkoljeRealizacijaRDS <- 'C:/Users/Podlogar/Documents/Projekt Elektro/01_Priprava podatkov/Podatki/Proizvodnja/RDS'
+## okolje v katerem se shrani RDS realizacije
+OkoljeRealizacijaSAVE <- 'C:/Users/Podlogar/Documents/Projekt Elektro/00_Podatki/PodatkiRDS/realizacija'
 ## okolje kjer so shranjene napovedi vremenskih parametrov
 OkoljeVreme <- 'C:/Users/Podlogar/Documents/Projekt Elektro/01_Priprava podatkov/Podatki/RNF - Meritve in ARSO podatki'
 ## okolje kjer so shranjene napovedi vremenskih parametrov
-OkoljeVremeRDS <- 'C:/Users/Podlogar/Documents/Projekt Elektro/01_Priprava podatkov/Podatki/RNF - Meritve in ARSO podatki/RDS'
+OkoljeVremeSAVE <- 'C:/Users/Podlogar/Documents/Projekt Elektro/00_Podatki/PodatkiRDS/vremenskaNapoved'
+OkoljeFM_SAVE <- 'C:/Users/Podlogar/Documents/Projekt Elektro/00_Podatki/PodatkiRDS/featureMatrix'
 
 
 ## iz csv-ja realizacije ustvari xts in ga shrani kot RDS
@@ -24,7 +27,7 @@ for(elekt in dir()){
 		names(realizacija) <- 'realizacija'
 		## ime za RDS file
 		imeRDS <- paste0(substr(elekt, 1, nchar(elekt)-3), 'rds')
-		setwd(OkoljeRealizacijaRDS)
+		setwd(OkoljeRealizacijaSAVE)
 		## shranjevanje rds-a
 		saveRDS(realizacija, imeRDS)
 	}
@@ -32,6 +35,7 @@ for(elekt in dir()){
 
 
 ## iz csv-ja vremenskih napovedi ustvari xts in ga shrani kot RDS
+## ustvari feature matrix
 setwd(OkoljeVreme)
 for(kraj in dir()){
 	## izbor relavantnih failov
@@ -44,7 +48,19 @@ for(kraj in dir()){
 		## tvorjenje xts-a
 		datumi <- as.POSIXct(paste0(as.character(napoved[,1]), ' ', as.character(napoved[,2])), format = '%Y-%m-%d %H:%M:%S')
 		napovedVreme <- xts(napoved[,3:ncol(napoved)], datumi)
-		setwd(OkoljeVremeRDS)
-		saveRDS(napovedVreme ,imeRDS)		
+		setwd(OkoljeVremeSAVE)
+		saveRDS(napovedVreme ,imeRDS)
+		## tvorjenje feature matrix
+		## dodajanje dneva v letu in ure kot featurja
+		napoved[, 'dan v letu'] <- yday(datumi)
+		napoved[, 'ura v dnevu']<- hour(datumi)
+		## alternativno mesec in dan v mesecu (namesto dneva v letu)
+		## month(datumi)
+		## mday(datumi)
+		## tvorjenje xts-a		
+		featureMatrix <- xts(napoved[,3:ncol(napoved)], datumi)
+		setwd(OkoljeFM_SAVE)
+		imeFM <- paste0(substr(kraj, 1, nchar(kraj)-4), '_FM.rds')
+		saveRDS(featureMatrix ,imeFM)		
 	}
 }
