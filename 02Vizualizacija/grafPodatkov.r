@@ -1,10 +1,10 @@
 ## vizualizavija podatkov 
 library(xts)
 
-## realizacija shranjena v RDS
-OkoljeRealizacijaRDS <- 'C:/Users/Podlogar/Documents/Projekt Elektro/01_Priprava podatkov/Podatki/Proizvodnja/RDS'
-## okolje kjer so shranjene napovedi vremenskih parametrov
-OkoljeVremeRDS <- 'C:/Users/Podlogar/Documents/Projekt Elektro/01_Priprava podatkov/Podatki/RNF - Meritve in ARSO podatki/RDS'
+## okolje kjer je shranjena realizacija v RDS
+OkoljeRealizacijaRDS <- 'C:/Users/Podlogar/Documents/Projekt Elektro/00_Podatki/PodatkiRDS/realizacija'
+## okolje kjer so shranjene napovedi vremenskih parametrov v RDS
+OkoljeVremeRDS <- 'C:/Users/Podlogar/Documents/Projekt Elektro/00_Podatki/PodatkiRDS/vremenskaNapoved'
 
 
 ## risanje grafov realizacije
@@ -50,7 +50,7 @@ for(kraj in dir()){
 				## narisi graf za realizavije v odvisnosti od napovedi vremena
 				for(i in 1:ncol(vremeNapoved)){
 					plot(as.vector(vremeNapoved[,i]), as.vector(realizacija), ylab = 'realizacija', xlab = names(vremeNapoved[,i]))
-					cat (paste0("Press [enter] to continue from", elekt))
+					cat(paste0("Press [enter] to continue from", elekt))
 					line <- readline()
 				}
 			}
@@ -58,4 +58,20 @@ for(kraj in dir()){
 		setwd(OkoljeVremeRDS)		
 	}
 }
+
+
+## povezava med vremenskimi parametri
+setwd(OkoljeVremeRDS)
+for(kraj in dir()){
+	if(substr(kraj, 1, 5) == 'vreme'){
+		vremeNapoved <- readRDS(kraj)		
+		plot(data.frame(vremeNapoved))
+		cat(paste0("Press [enter] to continue from", elekt))
+		line <- readline()
+	}	
+}
+
+
+
+
 
