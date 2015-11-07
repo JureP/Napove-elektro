@@ -13,10 +13,10 @@ for(elekt in dir()){
 	imeRDS <- paste0(substr(elekt, 1, nchar(elekt)-3), 'rds')
 	realizacija <- readRDS(imeRDS)
 	plot(realizacija)
-	#cat (paste0("Press [enter] to continue from", elekt))
-    #line <- readline()
-	print(elekt)
-	Sys.sleep(2)
+	cat (paste0("Press [enter] to continue from", elekt))
+    line <- readline()
+	#print(elekt)
+	#Sys.sleep(2)
 }
 
 
