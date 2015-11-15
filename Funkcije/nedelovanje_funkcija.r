@@ -1,6 +1,6 @@
 ## funkcija ki odstrani obdobja ko elektrarna ne deluje 
 
-nedelovanje <- function(realizacij, ## realizacija proizvodnje (xts)
+nedelovanje <- function(realizacija, ## realizacija proizvodnje (xts)
 						stDni = 1 ## st dni 0, da se elekt proglasi za nedelujoco
 						)
 				## funkcija ki iz podatkov odstrani obdobje, ko 
